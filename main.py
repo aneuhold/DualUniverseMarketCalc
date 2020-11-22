@@ -24,6 +24,7 @@ def editGameItem(name):
   if (gameItem is None):
     return
   print('found the item')
+  gameItem.editPrompt()
 
 
 exitIndicated = False
