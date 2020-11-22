@@ -1,10 +1,8 @@
 from src.GameItem import GameItem
+from src.printFunctions import *
 import json
 from os import path
 import config
-
-item = GameItem('Something')
-item.printItem()
 
 
 def getGameItems():
@@ -21,6 +19,8 @@ print(items)
 
 exitIndicated = False
 while exitIndicated is False:
-  inputStr = input('What would you like to do? ("exit" to close): ')
+  inputStr = input('What would you like to do? ("help" for commands): ')
   if inputStr == 'exit':
     exitIndicated = True
+  elif inputStr == 'help':
+    printHelp()

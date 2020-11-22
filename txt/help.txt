@@ -1,0 +1,3 @@
+help      : Shows a description of the different available commands
+exit      : Exits the market calculator
+print     : Prints each game item in local storage with its values
