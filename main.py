@@ -25,6 +25,7 @@ def editGameItem(name):
     return
   print('found the item')
   gameItem.editPrompt()
+  gameItems.save()
 
 
 exitIndicated = False
