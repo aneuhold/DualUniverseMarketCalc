@@ -1,5 +1,9 @@
 # Dual Universe Market Calc
 
+## Usage
+
+Run `sh run.sh` from a shell and it will startup everythign for you 😁
+
 ## Dev Setup
 
 If the `env` folder hasn't been created yet locally, run

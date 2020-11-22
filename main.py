@@ -12,6 +12,11 @@ def addGameItem():
   addResult = gameItems.addItem(name)
   if (addResult is not True):
     return
+  print('Game item addition was successful')
+
+
+def printItems():
+  gameItems.printItems()
 
 
 exitIndicated = False
@@ -23,3 +28,5 @@ while exitIndicated is False:
     printHelp()
   elif inputStr == 'add':
     addGameItem()
+  elif inputStr == 'print':
+    printItems()

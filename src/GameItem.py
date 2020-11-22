@@ -1,3 +1,6 @@
+from src.TermColors import Colors
+
+
 class GameItem:
   """Represents an item in the game. Holds values for it's market value and
   sub-components"""
@@ -19,8 +22,8 @@ class GameItem:
   def addCraftingCost(self, itemName, quantity):
     self._craftingCost[itemName] = quantity
 
-  def printItem(self):
+  def print(self):
     """Prints values for this game item to the console"""
-    print(self._name)
-    print(self._marketSellPrice)
-    print(self._craftingCost)
+    print(Colors.OKBLUE + self._name + Colors.ENDC)
+    print('\tMarket Sell Price: ', self._marketSellPrice)
+    print('\tCrafting Cost: ', self._craftingCost)

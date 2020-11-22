@@ -3,7 +3,7 @@ from os import path
 from src.GameItem import GameItem
 import jsonpickle
 
-gameItemsFileName = '../gameItems.json'
+gameItemsFileName = 'gameItems.json'
 
 
 class GameItems:
@@ -23,6 +23,7 @@ class GameItems:
     else:
       self._gameItems[name] = GameItem(name)
       self.save()
+
       return True
 
   def getItem(self, name):
@@ -30,6 +31,10 @@ class GameItems:
 
   def getItems(self):
     return self._gameItems
+
+  def printItems(self):
+    for itemName in self._gameItems:
+      print(self._gameItems[itemName].print())
 
   def save(self):
     with open(gameItemsFileName, 'w') as json_file:
