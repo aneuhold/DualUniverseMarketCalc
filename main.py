@@ -1,21 +1,18 @@
-from src.GameItem import GameItem
+from src.GameItems import GameItems
 from src.printFunctions import *
 import json
 from os import path
 import config
 
-
-def getGameItems():
-  if path.exists(config.gameItemsFileName):
-    with open(config.gameItemsFileName) as json_file:
-      return json.load(json_file)
-  else:
-    return {}
+gameItems = GameItems()
 
 
-# Import the items from a local json file if there is one
-items = getGameItems()
-print(items)
+def addGameItem():
+  name = input('Name of the game item: ')
+  addResult = gameItems.addItem(name)
+  if (addResult is not True):
+    return
+
 
 exitIndicated = False
 while exitIndicated is False:
@@ -24,3 +21,5 @@ while exitIndicated is False:
     exitIndicated = True
   elif inputStr == 'help':
     printHelp()
+  elif inputStr == 'add':
+    addGameItem()
