@@ -1,5 +1,6 @@
-from src.TermColors import Colors
+from src.TermColors import Colors, colorText
 from src.ItemData import ItemData
+from src.inputUtils import parseToNum
 
 
 class GameItemDataName:
@@ -50,23 +51,15 @@ class GameItem:
         i += 1
       print(str(i) + '. Stop editing')
       choice = input('Enter a number from above: ')
-      parsedChoice = None
-      try:
-        parsedChoice = int(choice[:2])
-      except:
-        print('"' + choice + '" is not a number.')
+      parsedChoice = parseToNum(choice, 1, dataKeyList.__len__() + 1)
 
       # If the choice was successfully parsed
       if (parsedChoice is not None):
-        # If it is within bounds
-        if (parsedChoice != 0 and parsedChoice <= dataKeyList.__len__() + 1):
-          # If they chose to stop editing
-          if (parsedChoice == dataKeyList.__len__() + 1):
-            doneEditing = True
-          else:
-            self.editDataPrompt(dataKeyList[parsedChoice - 1])
+        # If they chose to stop editing
+        if (parsedChoice == dataKeyList.__len__() + 1):
+          doneEditing = True
         else:
-          print(str(parsedChoice) + 'is not one of the values listed.')
+          self.editDataPrompt(dataKeyList[parsedChoice - 1])
 
   def editDataPrompt(self, dataName):
     if (dataName == GameItemDataName.CRAFTING_COST):
@@ -78,7 +71,36 @@ class GameItem:
     print('Value successfully changed')
 
   def editCraftingCostPrompt(self):
-    print('This is still in development')
+    doneEditing = False
+    while(doneEditing is False):
+      print('Enter a command below to edit the crafting components')
+      print(Colors.OKCYAN + 'add' + Colors.ENDC +
+            ': Add a new crafting requirement to ' +
+            colorText(self._data['name'].data, Colors.OKBLUE))
+      print(Colors.OKCYAN + 'edit [itemName]' + Colors.ENDC +
+            ': Edit the crafting requirement with the given ' +
+            '"itemName"')
+      print(Colors.OKCYAN + 'delete [itemName]' + Colors.ENDC +
+            ' Delete the crafting requirement with the given' +
+            ' "itemName"')
+      print(Colors.OKCYAN + 'exit' + Colors.ENDC +
+            ': Exit editing')
+      inputStr = input('Enter command: ')
+      if (inputStr == 'exit'):
+        doneEditing = True
+      elif (inputStr == 'add'):
+        self.addCraftingCostPrompt()
+
+  def addCraftingCostPrompt(self):
+    name = input('Enter the name of the crafting component: ')
+    parsedChoice = None
+    while (parsedChoice == None):
+      quantity = input('Enter the quantity of the crafting component: ')
+      parsedChoice = parseToNum(quantity, 1)
+      if (parsedChoice is not None):
+        craftingItems = self._data[GameItemDataName.CRAFTING_COST].data
+        craftingItems[name] = quantity
+        self._data[GameItemDataName.CRAFTING_COST].data = craftingItems
 
   def print(self):
     """Prints values for this game item to the console"""

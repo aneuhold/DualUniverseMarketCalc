@@ -8,3 +8,7 @@ class Colors:
   ENDC = '\033[0m'
   BOLD = '\033[1m'
   UNDERLINE = '\033[4m'
+
+
+def colorText(text, color):
+  return color + text + Colors.ENDC
