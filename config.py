@@ -1,0 +1,1 @@
+gameItemsFileName = 'gameItems.json'
