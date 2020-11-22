@@ -27,7 +27,11 @@ class GameItems:
       return True
 
   def getItem(self, name):
-    return self._gameItems[name]
+    if name in self._gameItems:
+      return self._gameItems[name]
+    else:
+      print('Game item with name "' + name + '" was not found.')
+      return None
 
   def getItems(self):
     return self._gameItems

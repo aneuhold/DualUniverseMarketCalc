@@ -19,6 +19,13 @@ def printItems():
   gameItems.printItems()
 
 
+def editGameItem(name):
+  gameItem = gameItems.getItem(name)
+  if (gameItem is None):
+    return
+  print('found the item')
+
+
 exitIndicated = False
 while exitIndicated is False:
   inputStr = input('What would you like to do? ("help" for commands): ')
@@ -30,3 +37,5 @@ while exitIndicated is False:
     addGameItem()
   elif inputStr == 'print':
     printItems()
+  elif inputStr.startswith('edit'):
+    editGameItem(inputStr[5:])
