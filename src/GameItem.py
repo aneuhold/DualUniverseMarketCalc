@@ -1,6 +1,10 @@
 from src.TermColors import Colors, colorText
 from src.ItemData import ItemData
 from src.inputUtils import parseToNum
+import pprint
+
+pp = pprint.PrettyPrinter(indent=2)
+prettyFormat = pp.pformat
 
 
 class GameItemDataName:
@@ -73,6 +77,8 @@ class GameItem:
   def editCraftingCostPrompt(self):
     doneEditing = False
     while(doneEditing is False):
+      craftingItems = self._data[GameItemDataName.CRAFTING_COST].data
+      print(colorText(prettyFormat(craftingItems), Colors.OKGREEN))
       print('Enter a command below to edit the crafting components')
       print(Colors.OKCYAN + 'add' + Colors.ENDC +
             ': Add a new crafting requirement to ' +
@@ -89,9 +95,13 @@ class GameItem:
       if (inputStr == 'exit'):
         doneEditing = True
       elif (inputStr == 'add'):
-        self.addCraftingCostPrompt()
+        self.addCraftingItemPrompt()
+      elif (inputStr.startswith('delete')):
+        self.deleteCraftingItem(inputStr[7:])
+      elif (inputStr.startswith('edit')):
+        self.editCraftingItemPrompt(inputStr[5:])
 
-  def addCraftingCostPrompt(self):
+  def addCraftingItemPrompt(self):
     name = input('Enter the name of the crafting component: ')
     parsedChoice = None
     while (parsedChoice == None):
@@ -101,6 +111,43 @@ class GameItem:
         craftingItems = self._data[GameItemDataName.CRAFTING_COST].data
         craftingItems[name] = quantity
         self._data[GameItemDataName.CRAFTING_COST].data = craftingItems
+
+  def editCraftingItemPrompt(self, craftItemName):
+    selectionMade = False
+    craftingDataItem = self._data[GameItemDataName.CRAFTING_COST]
+    craftItemQuantity = craftingDataItem.data[craftItemName]
+    while(selectionMade == False):
+      print('Edit the name or the quantity?')
+      print('name: ' + craftItemName)
+      print('qty: ' + craftItemQuantity)
+      selection = input('name, qty, or exit: ')
+      if selection == 'exit':
+        selectionMade = True
+        return
+      elif selection == 'qty':
+        quantity = input('Enter the quantity of the crafting component: ')
+        parsedQty = parseToNum(quantity, 1)
+        if (parsedQty is not None):
+          craftingItems = craftingDataItem.data
+          craftingItems[craftItemName] = parsedQty
+          craftingDataItem.data = craftingItems
+          selectionMade = True
+      elif selection == 'name':
+        newName = input('Enter the new name of the crafting component: ')
+        craftingItems = craftingDataItem.data
+        craftingItems[newName] = craftingItems[craftItemName]
+        del craftingItems[craftItemName]
+        craftingDataItem.data = craftingItems
+        selectionMade = True
+
+  def deleteCraftingItem(self, craftItemName):
+    craftingItems = self._data[GameItemDataName.CRAFTING_COST].data
+    if (craftItemName in craftingItems):
+      del craftingItems[craftItemName]
+      self._data[GameItemDataName.CRAFTING_COST].data = craftingItems
+    else:
+      print('Crafting item with name: "' + craftItemName + '" does not exist' +
+            ' for "' + self._data[GameItemDataName.NAME].data + '"')
 
   def print(self):
     """Prints values for this game item to the console"""
