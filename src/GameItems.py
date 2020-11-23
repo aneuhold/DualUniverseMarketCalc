@@ -46,6 +46,9 @@ class GameItems:
     for itemName in self._gameItems:
       self._gameItems[itemName].print(self)
 
+  def printTree(self, itemName):
+    self._gameItems[itemName].printTree(0, self, 1)
+
   def save(self):
     with open(gameItemsFileName, 'w') as json_file:
       json_file.write(jsonpickle.encode(self._gameItems))

@@ -196,3 +196,26 @@ class GameItem:
     else:
       print('\tCraft item total market cost: ' + 'unknown because some ' +
             'crafting items do not have a market value')
+
+  def printTree(self, numIndent, gameItems, quantity):
+    """Prints a tree of this game item where the children are the components
+    required to build this item, and their cost is their market price
+    multiplied by the given quanitity."""
+
+    spaces = ''
+    spaceRange = range(numIndent)
+    for i in spaceRange:
+      spaces += '  '
+    name = self._data[GameItemDataName.NAME].data
+
+    # Get the actual cost of the item and print it
+    marketSellPrice = self._data[GameItemDataName.MARKET_SELL_PRICE].data
+    actualCost = marketSellPrice * quantity
+    print(spaces + colorText(name, Colors.OKBLUE) + ": " + "{:,.2f}".format(actualCost))
+
+    # Get the crafting requirements for this game item
+    craftingItems = self._data[GameItemDataName.CRAFTING_COST].data
+    for craftName, craftQty in craftingItems.items():
+      gameItem = gameItems.getItem(craftName)
+      if gameItem is not None:
+        gameItem.printTree(numIndent + 1, gameItems, craftQty * quantity)

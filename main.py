@@ -19,6 +19,10 @@ def printItems():
   gameItems.printItems()
 
 
+def printTree(name):
+  gameItems.printTree(name)
+
+
 def editGameItem(name):
   gameItem = gameItems.getItem(name)
   if (gameItem is None):
@@ -39,5 +43,7 @@ while exitIndicated is False:
     addGameItem()
   elif inputStr == 'print':
     printItems()
+  elif inputStr.startswith('print tree'):
+    printTree(inputStr[11:])
   elif inputStr.startswith('edit'):
     editGameItem(inputStr[5:])
