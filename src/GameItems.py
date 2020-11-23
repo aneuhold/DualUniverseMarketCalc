@@ -14,7 +14,7 @@ class GameItems:
       with open(gameItemsFileName) as json_file:
         self._gameItems = jsonpickle.decode(json_file.read())
     else:
-      self._gameItems = {}
+      self._gameItems = []
 
   def addItem(self, name):
     if name in self._gameItems:
@@ -29,6 +29,13 @@ class GameItems:
   def getItem(self, name):
     if name in self._gameItems:
       return self._gameItems[name]
+    else:
+      return None
+
+  def changeItemName(self, oldName, newName):
+    if oldName in self._gameItems:
+      self._gameItems[newName] = self._gameItems[oldName]
+      del self._gameItems[oldName]
     else:
       return None
 

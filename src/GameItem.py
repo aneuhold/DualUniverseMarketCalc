@@ -43,7 +43,7 @@ class GameItem:
     craftingCost[itemName] = quantity
     self._data.craftingCost.data = craftingCost
 
-  def editPrompt(self):
+  def editPrompt(self, gameItems):
     dataKeyList = list(self._data.keys())
     doneEditing = False
     while (doneEditing is False):
@@ -65,18 +65,19 @@ class GameItem:
         else:
           self.editDataPrompt(dataKeyList[parsedChoice - 1])
 
-  def editDataPrompt(self, dataName):
+  def editDataPrompt(self, dataName, gameItems=None):
     if (dataName == GameItemDataName.CRAFTING_COST):
       self.editCraftingCostPrompt()
       return
     elif(dataName == GameItemDataName.MARKET_SELL_PRICE):
       self.editMarketSellPricePrompt()
       return
-
-    newValue = input('Enter a new value for "' +
-                     self._data[dataName].title + '": ')
-    self._data[dataName].data = newValue
-    print('Value successfully changed')
+    elif(dataName == GameItemDataName.NAME):
+      newValue = input('Enter a new value for "' +
+                       self._data[dataName].title + '": ')
+      self._data[dataName].data = newValue
+      gameItems.changeItemName(newValue)
+      print('Value successfully changed')
 
   def editMarketSellPricePrompt(self):
     correctValueEntered = False
@@ -121,7 +122,7 @@ class GameItem:
     parsedChoice = None
     while (parsedChoice == None):
       quantity = input('Enter the quantity of the crafting component: ')
-      parsedChoice = parseToInt(quantity, 1)
+      parsedChoice = parseToFloat(quantity, 0)
       if (parsedChoice is not None):
         craftingItems = self._data[GameItemDataName.CRAFTING_COST].data
         craftingItems[name] = parsedChoice
@@ -141,7 +142,7 @@ class GameItem:
         return
       elif selection == 'qty':
         quantity = input('Enter the quantity of the crafting component: ')
-        parsedQty = parseToInt(quantity, 1)
+        parsedQty = parseToFloat(quantity, 0)
         if (parsedQty is not None):
           craftingItems = craftingDataItem.data
           craftingItems[craftItemName] = parsedQty
@@ -187,8 +188,10 @@ class GameItem:
         if (craftItemMarketCost is not None):
           totalMarketCost += craftItemMarketCost * craftItemQty
         else:
+          print('craftItemMarketCost was None')
           allCraftItemsFound = False
       else:
+        print('craftItemObj was None, and craftItemName is: ', craftItemName)
         allCraftItemsFound = False
     if (allCraftItemsFound):
       print('\tCraft item total market cost: ' + "{:,}".format(totalMarketCost))
