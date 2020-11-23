@@ -134,7 +134,7 @@ class GameItem:
     while(selectionMade == False):
       print('Edit the name or the quantity?')
       print('name: ' + craftItemName)
-      print('qty: ' + craftItemQuantity)
+      print('qty: ' + str(craftItemQuantity))
       selection = input('name, qty, or exit: ')
       if selection == 'exit':
         selectionMade = True
