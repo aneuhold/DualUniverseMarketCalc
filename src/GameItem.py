@@ -188,10 +188,8 @@ class GameItem:
         if (craftItemMarketCost is not None):
           totalMarketCost += craftItemMarketCost * craftItemQty
         else:
-          print('craftItemMarketCost was None')
           allCraftItemsFound = False
       else:
-        print('craftItemObj was None, and craftItemName is: ', craftItemName)
         allCraftItemsFound = False
     if (allCraftItemsFound):
       print('\tCraft item total market cost: ' + "{:,}".format(totalMarketCost))
