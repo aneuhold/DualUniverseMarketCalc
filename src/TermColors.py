@@ -11,4 +11,4 @@ class Colors:
 
 
 def colorText(text, color):
-  return color + text + Colors.ENDC
+  return color + str(text) + Colors.ENDC

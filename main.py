@@ -22,8 +22,8 @@ def printItems():
 def editGameItem(name):
   gameItem = gameItems.getItem(name)
   if (gameItem is None):
+    print('Game item with name "' + name + '" was not found.')
     return
-  print('found the item')
   gameItem.editPrompt()
   gameItems.save()
 

@@ -1,6 +1,6 @@
 from src.TermColors import Colors, colorText
 from src.ItemData import ItemData
-from src.inputUtils import parseToNum
+from src.inputUtils import parseToInt, parseToFloat
 import pprint
 
 pp = pprint.PrettyPrinter(indent=2)
@@ -55,7 +55,7 @@ class GameItem:
         i += 1
       print(str(i) + '. Stop editing')
       choice = input('Enter a number from above: ')
-      parsedChoice = parseToNum(choice, 1, dataKeyList.__len__() + 1)
+      parsedChoice = parseToInt(choice, 1, dataKeyList.__len__() + 1)
 
       # If the choice was successfully parsed
       if (parsedChoice is not None):
@@ -69,9 +69,24 @@ class GameItem:
     if (dataName == GameItemDataName.CRAFTING_COST):
       self.editCraftingCostPrompt()
       return
+    elif(dataName == GameItemDataName.MARKET_SELL_PRICE):
+      self.editMarketSellPricePrompt()
+      return
 
-    newValue = input('Enter a new value for "' + self._data[dataName].title + '": ')
+    newValue = input('Enter a new value for "' +
+                     self._data[dataName].title + '": ')
     self._data[dataName].data = newValue
+    print('Value successfully changed')
+
+  def editMarketSellPricePrompt(self):
+    correctValueEntered = False
+    while (correctValueEntered is False):
+      newValue = input('Enter a new value for "' +
+                       self._data[GameItemDataName.MARKET_SELL_PRICE].title + '": ')
+      parsedValue = parseToFloat(newValue, min=0)
+      if (parsedValue is not None):
+        self._data[GameItemDataName.MARKET_SELL_PRICE].data = parsedValue
+        correctValueEntered = True
     print('Value successfully changed')
 
   def editCraftingCostPrompt(self):
@@ -106,10 +121,10 @@ class GameItem:
     parsedChoice = None
     while (parsedChoice == None):
       quantity = input('Enter the quantity of the crafting component: ')
-      parsedChoice = parseToNum(quantity, 1)
+      parsedChoice = parseToInt(quantity, 1)
       if (parsedChoice is not None):
         craftingItems = self._data[GameItemDataName.CRAFTING_COST].data
-        craftingItems[name] = quantity
+        craftingItems[name] = parsedChoice
         self._data[GameItemDataName.CRAFTING_COST].data = craftingItems
 
   def editCraftingItemPrompt(self, craftItemName):
@@ -126,7 +141,7 @@ class GameItem:
         return
       elif selection == 'qty':
         quantity = input('Enter the quantity of the crafting component: ')
-        parsedQty = parseToNum(quantity, 1)
+        parsedQty = parseToInt(quantity, 1)
         if (parsedQty is not None):
           craftingItems = craftingDataItem.data
           craftingItems[craftItemName] = parsedQty
@@ -149,10 +164,34 @@ class GameItem:
       print('Crafting item with name: "' + craftItemName + '" does not exist' +
             ' for "' + self._data[GameItemDataName.NAME].data + '"')
 
-  def print(self):
+  def print(self, gameItems):
     """Prints values for this game item to the console"""
     print(Colors.OKBLUE + self._data['name'].data + Colors.ENDC)
     for key in self._data:
       if key != GameItemDataName.NAME:
         itemData = self._data[key]
-        print('\t' + itemData.title + ': ', itemData.data)
+        itemValue = itemData.data
+        itemTitle = itemData.title
+        if type(itemValue) is float:
+          itemValue = "{:,}".format(itemValue)
+        elif type(itemValue) is dict:
+          itemValue = str(prettyFormat(itemValue))
+        print('\t' + itemTitle + ': ', colorText(itemValue, Colors.OKGREEN))
+    craftItems = self._data[GameItemDataName.CRAFTING_COST].data
+    totalMarketCost = 0
+    allCraftItemsFound = True
+    for craftItemName, craftItemQty in craftItems.items():
+      craftItemObj = gameItems.getItem(craftItemName)
+      if (craftItemObj is not None):
+        craftItemMarketCost = craftItemObj.getData(GameItemDataName.MARKET_SELL_PRICE).data
+        if (craftItemMarketCost is not None):
+          totalMarketCost += craftItemMarketCost * craftItemQty
+        else:
+          allCraftItemsFound = False
+      else:
+        allCraftItemsFound = False
+    if (allCraftItemsFound):
+      print('\tCraft item total market cost: ' + "{:,}".format(totalMarketCost))
+    else:
+      print('\tCraft item total market cost: ' + 'unknown because some ' +
+            'crafting items do not have a market value')

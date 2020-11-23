@@ -30,7 +30,6 @@ class GameItems:
     if name in self._gameItems:
       return self._gameItems[name]
     else:
-      print('Game item with name "' + name + '" was not found.')
       return None
 
   def getItems(self):
@@ -38,7 +37,7 @@ class GameItems:
 
   def printItems(self):
     for itemName in self._gameItems:
-      print(self._gameItems[itemName].print())
+      self._gameItems[itemName].print(self)
 
   def save(self):
     with open(gameItemsFileName, 'w') as json_file:
