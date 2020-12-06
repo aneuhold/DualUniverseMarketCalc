@@ -210,8 +210,9 @@ class GameItem:
 
     # Get the actual cost of the item and print it
     marketSellPrice = self._data[GameItemDataName.MARKET_SELL_PRICE].data
-    actualCost = marketSellPrice * quantity
-    print(spaces + colorText(name, Colors.OKBLUE) + ": " + "{:,.2f}".format(actualCost))
+    if marketSellPrice is not None:
+      actualCost = marketSellPrice * quantity
+      print(spaces + colorText(name, Colors.OKBLUE) + ": " + "{:,.2f}".format(actualCost))
 
     # Get the crafting requirements for this game item
     craftingItems = self._data[GameItemDataName.CRAFTING_COST].data
